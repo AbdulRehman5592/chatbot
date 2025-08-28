@@ -4,9 +4,30 @@ from langchain.prompts import PromptTemplate
 from pydantic import SecretStr
 from config import GOOGLE_API_KEY
 
-def get_chain():
-    prompt_template = """
-You are an intelligent assistant with access to document content and conversation history. 
+def get_chain(context_type="local"):# ... existing code ...
+
+    if context_type == "web":
+        prompt_template = """
+You are an intelligent assistant with access to web search results and conversation history.
+
+**Instructions:**
+1. Use the provided web search context to answer the question.
+2. If the answer is available in the web context, provide a comprehensive response.
+3. If not, respond with "Answer is not available in the context".
+4. Always be accurate and don't make up information.
+5. At the end of your response, always mention the URL(s) of the source(s) you used in the format "Source:[URL]".
+
+**Web Search Context:**
+{context}
+
+**Conversation History & Current Question:**
+{question}
+
+**Your Response:**
+"""
+    else:
+        prompt_template = """
+You are an intelligent assistant with access to document content and conversation history.
 
 **Instructions:**
 1. First, check the conversation history to see if this topic has been discussed before
@@ -14,7 +35,7 @@ You are an intelligent assistant with access to document content and conversatio
 3. If the answer is available in either the conversation history or document context, provide a comprehensive response
 4. If the answer is NOT available in either source, respond with "Answer is not available in the context"
 5. Always be accurate and don't make up information
-6. At the end of your response, always mention the URL or  page number or image number of the source(s) you used at the last with format "Source:[source-name]"
+6. At the end of your response, always mention the URL or  page number or image number of the source(s) you used at the last with format "Source:[source-name]..also if URL exists dont give page number or image number, just give URL"
 7. At the end of your response, also list the bounding boxes and source filenames of the image chunks you used, in the format: [Source: <filename>, BBox: [x_min, y_min, x_max, y_max]]
 
 **Document Context:**
@@ -25,6 +46,7 @@ You are an intelligent assistant with access to document content and conversatio
 
 **Your Response:**
 """
+# ... rest of get_chain() ...
     
     model = ChatGoogleGenerativeAI(
         model="gemini-2.0-flash-exp", 

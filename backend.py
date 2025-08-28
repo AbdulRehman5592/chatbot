@@ -142,6 +142,7 @@ async def chat(query: str = Form(...), session_id: str = Form(...)):
         
         # Extract results and metadata
         answer = result.get("answer", "No answer could be generated.")
+        print(f"[DEBUG] Generated answer: {answer}")
         timestamp = result.get("timestamp", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         
         # --- Extract bounding boxes from docs metadata ---
@@ -157,21 +158,21 @@ async def chat(query: str = Form(...), session_id: str = Form(...)):
                 })
 
         # --- Add sources to the answer ---
-        sources = []
-        for i, doc in enumerate(docs):
-            src = doc.metadata.get('source')
-            bbox = doc.metadata.get('bbox')
-            if src and src not in ('selectable_text', 'Unknown'):
-                if bbox:
-                    sources.append(f"Source:[File: {src}, BBox: {bbox}]")
-                else:
-                    sources.append(f"Source:[File: {src}]")
-        source_str = " ".join(sources)
-        final_answer_with_source = f"{answer}\n\n{source_str}" if sources else answer
+        # sources = []
+        # for i, doc in enumerate(docs):
+        #     src = doc.metadata.get('source')
+        #     bbox = doc.metadata.get('bbox')
+        #     if src and src not in ('selectable_text', 'Unknown'):
+        #         if bbox:
+        #             sources.append(f"Source:[File: {src}, BBox: {bbox}]")
+        #         else:
+        #             sources.append(f"Source:[File: {src}]")
+        # source_str = " ".join(sources)
+        # final_answer_with_source = f"{answer}\n\n{source_str}" if sources else answer
 
         # --- Return response with bboxes ---
         return {
-            "answer": final_answer_with_source, 
+            "answer": answer, 
             "session_id": session_id, 
             "bboxes": bboxes,  # Always return bboxes for highlighting
             "timestamp": timestamp

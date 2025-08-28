@@ -48,7 +48,7 @@ def llm_inference_node(state: ChatState):
     context = build_context_from_history(messages, query)
     
     start_time = time.time()
-    chain = get_chain()
+    chain = get_chain(context_type="local")  # Use "local" for local context
     
     # Pass the built context to the chain
     response = chain({
@@ -130,7 +130,7 @@ def tavily_call_func(state: ChatState) -> ChatState:
                 # Each web result becomes a Document with metadata for source (URL)
                 docs.append(Document(page_content=content, metadata={"image_number": url, "image_file": url}))
             # Call the LLM with all web docs as input_documents
-            chain = get_chain()
+            chain = get_chain(context_type="web")
             # Use conversation history as context
             context = build_context_from_history(state.get("messages", []), query)
             response = chain({

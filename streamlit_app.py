@@ -26,7 +26,8 @@ def display_source_file(source_files_str, session_id, bboxes=None):
         return
 
     # Extract all [File: ..., BBox: ...] entries from the answer string
-    source_entries = re.findall(r"Source:\[File: ([^,\]]+), BBox: (\[[^\]]+\])\]", source_files_str)
+    source_entries = re.findall(r"\[Source:\s*([^,\]]+),\s*BBox:\s*(\[[^\]]+\])\]", source_files_str)
+    st.markdown(f"**Source Files:** {source_entries}")
     if not source_entries:
         st.warning(f"Could not extract valid source file from: {source_files_str}")
         print(f"[DEBUG] Source extraction failed for: {source_files_str}")
@@ -40,6 +41,7 @@ def display_source_file(source_files_str, session_id, bboxes=None):
             if source_file not in bbox_map:
                 bbox_map[source_file] = []
             bbox_map[source_file].append(entry)
+            st.markdown(f"**Boxes:** {bbox_map[source_file]}")
 
     for source_file, bbox_str in source_entries:
         if not source_file or source_file == 'N/A':
@@ -84,8 +86,9 @@ def main():
             with st.chat_message("assistant", avatar="🤖"):
                 st.markdown(entry["answer"])
                 # Check for and display source file with bboxes
-                if "Source:" in entry["answer"]:
+                if "http"not in entry["answer"]:
                     bboxes = entry.get("bboxes")
+                    context_type="local"
                     display_source_file(entry["answer"], st.session_state.session_id, bboxes=bboxes)
 
     # Use a session state variable for user_question if set by speech
@@ -112,6 +115,7 @@ def main():
                 response = requests.post(f"{BACKEND_URL}/chat/", data=data)
                 if response.status_code == 200:
                     result = response.json()
+                    print(f"**Result:** {result['answer']}")
                     st.session_state.conversation_history.append({
                         "question": user_question,
                         "answer": result["answer"],

@@ -1,0 +1,25 @@
+[DOCX]
+# Project Overview
+This project is an intelligent assistant that allows users to chat with the content of multiple PDF documents. It leverages OCR (Optical Character Recognition) to extract text from PDFs, builds a vector store for semantic search, and uses Retrieval-Augmented Generation (RAG) with a Large Language Model (LLM) to answer user queries. If the answer is not found in the local documents, the system can automatically perform a web search and use those results to answer the query.
+
+# Features
+- Upload and process multiple PDF files with text and image extraction
+- OCR (Optical Character Recognition) for extracting text from images within PDFs
+- Semantic search over document content using vector embeddings
+- Retrieval-Augmented Generation (RAG) with a Large Language Model (LLM)
+- Automatic fallback to web search if the answer is not found in local documents
+- Chat interface for interactive Q&A
+- Source highlighting and bounding box visualization for local document answers
+- Performance monitoring and metrics
+- Session and history management
+
+# Tech Stack
+- **Backend:** FastAPI (Python)
+- **Frontend:** Streamlit
+- **PDF Processing:** PyMuPDF, pytesseract
+- **OCR:** Tesseract
+- **Vector Store:** FAISS
+- **LLM & RAG:** LangChain, Gemini (Google Generative AI)
+- **Web Search:** Tavily API
+- **Visualization:** Mermaid (for workflow diagrams)
+- **Other:** Python-dotenv, pandas, Pillow, and more (see requirements.txt) 
