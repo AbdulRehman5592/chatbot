@@ -3,8 +3,8 @@ import requests
 import shutil
 import os
 from dotenv import load_dotenv
-#from langgraph_workflow import visualize_workflow_mermaid
-#from streamlit_mermaid import st_mermaid
+from langgraph_workflow import visualize_workflow_mermaid
+from streamlit_mermaid import st_mermaid
 import re
 #import speech_recognition as sr
 from PIL import Image, ImageDraw
@@ -16,7 +16,7 @@ if 'conversation_history' not in st.session_state:
     st.session_state.conversation_history = []
 
 # Get backend URL from environment variable or use default
-BACKEND_URL = os.getenv("BACKEND_URL", "http://127.0.0.1:8000/")
+BACKEND_URL = os.getenv("BACKEND_URL", "https://chatbot5592.azurewebsites.net/")
 
 
 def display_source_file(source_files_str, session_id, bboxes=None):
@@ -772,7 +772,7 @@ with st.sidebar:
                     if st.session_state.session_id:
                         data["session_id"] = st.session_state.session_id
                     
-                    response = requests.post(f"{BACKEND_URL}/upload_pdfs/", files=files, data=data)
+                    response = requests.post(f"{BACKEND_URL}/upload_pdf/", files=files, data=data)
                     
                     if response.status_code == 200:
                         result = response.json()
