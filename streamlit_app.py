@@ -772,7 +772,7 @@ with st.sidebar:
                     if st.session_state.session_id:
                         data["session_id"] = st.session_state.session_id
                     
-                    response = requests.post(f"{BACKEND_URL}/upload_pdf/", files=files, data=data)
+                    response = requests.post(f"https://chatbot5592.azurewebsites.net/upload_pdf/", files=files, data=data)
                     
                     if response.status_code == 200:
                         result = response.json()
